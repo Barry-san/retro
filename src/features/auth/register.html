@@ -11,36 +11,45 @@
     <title>Retro - Register</title>
   </head>
   <body>
-    <form action="">
-      <div>
+    <form>
+      <div class="form-group">
         <label for="username">Username</label>
         <input
           type="text"
+          data-pristine-required-message="Please enter a username"
+          min="6"
+          placeholder="Minimum of 6 characters"
+          data-pristine-min-message="The username should be a minimum of 8 characters"
           name="username"
           id="username"
           required
         />
       </div>
 
-      <div>
+      <div class="form-group">
         <label for="password">Password</label>
         <input
           type="password"
           name="password"
           id="password"
+          min="8"
+          placeholder="Minimum of 8 characters"
+          data-pristine-min-message="The username should be a minimum of 8 characters"
           required
+          data-pristine-required-message="Please choose a password"
         />
       </div>
-      <div>
-        <label for="confirm_password"
+      <div class="form-group">
+        <label for="confirm-password"
           >Confirm Password</label
         >
         <input
           type="password"
-          name="confirm_password"
-          id="confirm_password"
+          name="confirm-password"
+          id="confirm-password"
           required
         />
+        <p id="confirm-password-error"></p>
       </div>
       <button type="submit">Register</button>
     </form>

@@ -15,5 +15,8 @@
     "eslint-plugin-import": "^2.27.5",
     "prettier": "^2.8.8",
     "vite": "^4.3.9"
+  },
+  "dependencies": {
+    "pristinejs": "^1.1.0"
   }
 }

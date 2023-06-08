@@ -1,18 +1,24 @@
+import Pristine from "pristinejs";
+
 const form = document.getElementsByTagName("form")[0];
-const [username, password, confirm_password] = [
-  document.getElementById("username"),
-  document.getElementById("password"),
-  document.getElementById("confirm_password"),
-];
+const [password, confirm_password, confirm_password_error] =
+  [
+    document.getElementById("password"),
+    document.getElementById("confirm-password"),
+    document.getElementById("confirm-password-error"),
+  ];
 
 function registerUser(e) {
+  e.preventDefault();
+  const pristine = new Pristine(form);
+  pristine.validate();
+
   if (password.value !== confirm_password.value) {
-    alert("Incorrect");
+    confirm_password_error.innerText =
+      "Password does not match confirm password.";
   }
   console.log({
-    username: username.value,
-    password: password.value,
-    confirm_password: confirm_password.value,
+    pristine: pristine,
   });
 }
 
