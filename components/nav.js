@@ -1,9 +1,9 @@
-export function createNavElement(loginLink) {
+export function createNavElement() {
   let nav = document.createElement("nav");
   nav.innerHTML = `
     <nav id="nav">
         <a href="/">Home</a>
-        <a id="login" href="/${loginLink}">Login</a>
+        <a id="login" href="src/login.html">Login</a>
     </nav>
     `;
 

@@ -1,11 +1,9 @@
-
 // import javascriptLogo from "./javascript.svg";
 // import viteLogo from "/vite.svg";
 // import { setupCounter } from "./counter.js";
 import { createNavElement } from "./components/nav";
-let nav = createNavElement("src/login.html");
+let nav = createNavElement();
 document.body.prepend(nav);
-
 
 // document.querySelector("#app").innerHTML = `
 //   <div>
