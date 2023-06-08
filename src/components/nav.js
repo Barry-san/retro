@@ -7,7 +7,7 @@ export function createNavElement() {
         <a id="login" href="/src/features/auth/login.html">Login</a>
         <a id="register" href="/src/features/auth/register.html" style="margin-left: 10px;">Register</a>
         </div>
-        </nav>
+    </nav>
     `;
 
   nav.firstElementChild.style.display = "flex";
