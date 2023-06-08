@@ -17,6 +17,7 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "firebase": "^9.22.2",
     "pristinejs": "^1.1.0"
   }
 }
