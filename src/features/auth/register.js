@@ -17,9 +17,6 @@ function registerUser(e) {
     confirm_password_error.innerText =
       "Password does not match confirm password.";
   }
-  console.log({
-    pristine: pristine,
-  });
 }
 
 form.addEventListener("submit", registerUser);
