@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="register.css">
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0"
@@ -13,14 +14,30 @@
     <form action="">
       <div>
         <label for="username">Username</label>
-        <input type="text" />
+        <input type="text" name="username" id="username" />
       </div>
 
       <div>
         <label for="password">Password</label>
-        <input type="password" />
+        <input
+          type="password"
+          name="password"
+          id="password"
+        />
       </div>
-      <button type="submit">Login</button>
+      <div>
+        <label for="confirm_password"
+          >Confirm Password</label
+        >
+        <input
+          type="password"
+          name="confirm_password"
+          id="confirm_password"
+        />
+      </div>
+      <button type="submit">Register</button>
     </form>
+    <script type="module" src="../../../main.js"></script>
+    <script type="module" src="register.js"></script>
   </body>
 </html>
