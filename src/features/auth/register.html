@@ -16,6 +16,18 @@
     </button>
     <form>
       <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          name="username"
+          data-pristine-pattern="/^.{6,}$/"
+          data-pristine-required-message="Please choose a username"
+          data-pristine-pattern-message="The password should be a minimum of 6 characters"
+          id="username"
+          required
+        />
+      </div>
+      <div class="form-group">
         <label for="email">Email</label>
         <input
           type="email"
