@@ -11,35 +11,19 @@
     <title>Retro - Register</title>
   </head>
   <body>
+    <button class="google-signup">
+      Sign Up With Google
+    </button>
     <form>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          data-pristine-required-message="Please enter a username"
-          min="6"
-          placeholder="Minimum of 6 characters"
-          data-pristine-min-message="The username should be a minimum of 8 characters"
-          name="username"
-          id="username"
-          required
-        />
-      </div>
       <div class="form-group">
         <label for="email">Email</label>
         <input
-          type="text"
-          data-pristine-required-message="Please enter a email"
-          
-          min="6"
-          placeholder="Minimum of 6 characters"
-          data-pristine-min-message="The email should be a minimum of 8 characters"
+          type="email"
           name="email"
           id="email"
           required
         />
       </div>
-      <!--TODO: edit email correctly-->
 
       <div class="form-group">
         <label for="password">Password</label>
@@ -47,9 +31,9 @@
           type="password"
           name="password"
           id="password"
-          min="8"
-          placeholder="Minimum of 8 characters"
-          data-pristine-min-message="The username should be a minimum of 8 characters"
+          data-pristine-pattern="/^.{6,}$/"
+          placeholder="Minimum of 6 characters"
+          data-pristine-pattern-message="The password should be a minimum of 6 characters"
           required
           data-pristine-required-message="Please choose a password"
         />
@@ -63,10 +47,12 @@
           name="confirm-password"
           id="confirm-password"
           required
+          data-pristine-equals="#password"
+          data-pristine-equals-message="Confirm password should match password"
         />
-        <p id="confirm-password-error"></p>
+        <!-- <p id="confirm-password-error"></p> -->
       </div>
-      <button type="submit">Register</button>
+      <button>Register</button>
     </form>
     <script type="module" src="../../../main.js"></script>
     <script type="module" src="register.js"></script>
