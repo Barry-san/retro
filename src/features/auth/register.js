@@ -1,19 +1,29 @@
 import Pristine from "pristinejs";
-import { auth } from "../../../firebase.config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/config/firebase.config";
+
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 
 const form = document.getElementsByTagName("form")[0];
-
+const googleSignupButton =
+  document.getElementsByClassName("google-signup")[0];
+let user;
+const googleProvider = new GoogleAuthProvider();
 const [email, password] = [
   document.getElementById("email"),
   document.getElementById("password"),
 ];
 
-async function registerUser(e) {
-  e.preventDefault();
+function validate() {
   const pristine = new Pristine(form);
   pristine.validate();
-  console.log("here");
+}
+async function registerUser(e) {
+  e.preventDefault();
+  validate();
   await createUserWithEmailAndPassword(
     auth,
     email.value,
@@ -26,7 +36,20 @@ async function registerUser(e) {
     .catch((err) => {
       console.log(err);
     });
-  console.log("here too");
+}
+
+async function signUpWithGoogle() {
+  await signInWithPopup(auth, googleProvider)
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 }
 
 form.addEventListener("submit", registerUser);
+googleSignupButton.addEventListener(
+  "click",
+  signUpWithGoogle
+);
