@@ -13,9 +13,12 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { setUserSession } from "../../utils/usersession";
 
 const form = document.getElementsByTagName("form")[0];
+const formSubmitButton =
+  document.querySelector(".register-cta");
 const googleSignupButton =
   document.getElementsByClassName("google-signup")[0];
 const googleProvider = new GoogleAuthProvider();
+
 const [usernameElem, emailElem, passwordElem] = [
   document.getElementById("username"),
   document.getElementById("email"),
@@ -73,7 +76,10 @@ async function signUpWithGoogle() {
 async function registerUser(e) {
   e.preventDefault();
   validate();
+  formSubmitButton.setAttribute("disabled", true);
+  formSubmitButton.innerText = "Loading...";
   let usernameExists = await confirmUserUniqueness();
+
   if (usernameExists === false) {
     await createUserWithEmailAndPassword(
       auth,
@@ -97,15 +103,21 @@ async function registerUser(e) {
           });
         } catch (err) {
           console.log(err);
+          formSubmitButton.removeAttribute("disabled");
+          formSubmitButton.innerText = "Register";
         }
       })
       .catch((err) => {
         if (err.message.includes("email-already-in-use")) {
           console.log("Email already exists");
+          formSubmitButton.removeAttribute("disabled");
+          formSubmitButton.innerText = "Register";
         }
       });
   } else {
     console.log("Username already exists");
+    formSubmitButton.removeAttribute("disabled");
+    formSubmitButton.innerText = "Register";
   }
 }
 
