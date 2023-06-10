@@ -10,7 +10,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { setUserSession } from "../../../usersession";
+import { setUserSession } from "../../utils/usersession";
 
 const form = document.getElementsByTagName("form")[0];
 const googleSignupButton =
@@ -80,20 +80,21 @@ async function registerUser(e) {
       emailElem.value,
       passwordElem.value
     )
-      .then((userCred) => {
+      .then(async (userCred) => {
         try {
-          addUserToDb(
+          await addUserToDb(
             userCred.user.uid,
             usernameElem.value,
             emailElem.value
-          );
-          let user = {
-            email: emailElem.value,
-            uid: userCred.user.uid,
-            username: usernameElem.value,
-          };
-          setUserSession(user);
-          location.href = "/";
+          ).then(() => {
+            let user = {
+              email: emailElem.value,
+              uid: userCred.user.uid,
+              username: usernameElem.value,
+            };
+            setUserSession(user);
+            location.href = "/";
+          });
         } catch (err) {
           console.log(err);
         }
