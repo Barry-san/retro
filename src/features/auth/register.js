@@ -9,17 +9,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { setUserSession } from "../../../usersession";
 
 const form = document.getElementsByTagName("form")[0];
 const googleSignupButton =
   document.getElementsByClassName("google-signup")[0];
-let user;
 const googleProvider = new GoogleAuthProvider();
 const [usernameElem, emailElem, passwordElem] = [
   document.getElementById("username"),
@@ -32,10 +27,43 @@ function validate() {
   pristine.validate();
 }
 
+async function addUserToDb(uid, username, email) {
+  await setDoc(doc(database, "users", username), {
+    username,
+    email,
+    uid,
+  });
+}
+
+async function confirmUserUniqueness() {
+  const usernameRef = doc(
+    database,
+    "users",
+    usernameElem.value
+  );
+  const usernameSnap = await getDoc(usernameRef);
+  if (usernameSnap.exists()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 async function signUpWithGoogle() {
   await signInWithPopup(auth, googleProvider)
-    .then((result) => {
-      console.log(result);
+    .then((user) => {
+      addUserToDb(
+        user.user.uid,
+        user.user.displayName.split(" ")[0],
+        user.user.email
+      );
+      let userData = {
+        name: user.user.displayName.split(" ")[0],
+        email: user.user.email,
+        uid: user.user.uid,
+      };
+      setUserSession(userData);
+      location.href = "/";
     })
     .catch((err) => {
       console.log(err.message);
@@ -45,41 +73,39 @@ async function signUpWithGoogle() {
 async function registerUser(e) {
   e.preventDefault();
   validate();
-  // let usernameExists = confirmUsernameUniqueness();
-  // console.log(usernameExists);
-  // if (usernameExists !== true) {
-  await createUserWithEmailAndPassword(
-    auth,
-    emailElem.value,
-    passwordElem.value
-  )
-    .then((userCred) => {
-      addUserToDb(userCred.user.uid);
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-  // } else {
-  //   console.log("Username already exists");
-  // }
-}
-
-async function confirmUsernameUniqueness() {
-  const docRef = doc(database, "users", usernameElem.value);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return "sike";
+  let usernameExists = await confirmUserUniqueness();
+  if (usernameExists === false) {
+    await createUserWithEmailAndPassword(
+      auth,
+      emailElem.value,
+      passwordElem.value
+    )
+      .then((userCred) => {
+        try {
+          addUserToDb(
+            userCred.user.uid,
+            usernameElem.value,
+            emailElem.value
+          );
+          let user = {
+            email: emailElem.value,
+            uid: userCred.user.uid,
+            username: usernameElem.value,
+          };
+          setUserSession(user);
+          location.href = "/";
+        } catch (err) {
+          console.log(err);
+        }
+      })
+      .catch((err) => {
+        if (err.message.includes("email-already-in-use")) {
+          console.log("Email already exists");
+        }
+      });
   } else {
-    return false;
+    console.log("Username already exists");
   }
-}
-
-async function addUserToDb(uid) {
-  await setDoc(doc(database, "users", usernameElem.value), {
-    username: usernameElem.value,
-    email: emailElem.value,
-    uid,
-  }).catch((err) => console.log(err.message));
 }
 
 form.addEventListener("submit", registerUser);
