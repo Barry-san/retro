@@ -1,17 +1,26 @@
 // Import the functions you need from the SDKs you need
+
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+const apiKey = import.meta.env.VITE_API_KEY;
+const authDomain = import.meta.env.VITE_AUTH_DOMAIN;
+const storageBucket = import.meta.env.VITE_STORAGE_BUCKET;
+const projectId = import.meta.env.VITE_PROJECT_ID;
+const messagingSenderId = import.meta.env
+  .VITE_MESSAGING_SENDER_ID;
+const appId = import.meta.env.VITE_APP_ID;
 
+const measurementId = import.meta.env.VITE_MEASUREMENT_ID;
 const firebaseConfig = {
-  apiKey: "AIzaSyCKssoB2i7abKzFBwipcBDpQnIRisx4vm4",
-  authDomain: "retro-d1b09.firebaseapp.com",
-  projectId: "retro-d1b09",
-  storageBucket: "retro-d1b09.appspot.com",
-  messagingSenderId: "40535315290",
-  appId: "1:40535315290:web:2d5271a2e83056e05e5963",
-  measurementId: "G-J9S60RDBBT",
+  apiKey,
+  authDomain,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+  measurementId,
 };
 
 // Initialize Firebase

@@ -11,6 +11,7 @@ import {
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   setDoc,
 } from "firebase/firestore";
@@ -21,8 +22,8 @@ const googleSigninButton =
   document.getElementsByClassName("google-signin")[0];
 const googleProvider = new GoogleAuthProvider();
 let users = [];
-const [emailElem, passwordElem] = [
-  document.getElementById("email"),
+const [userNameElem, passwordElem] = [
+  document.getElementById("username"),
   document.getElementById("password"),
 ];
 
@@ -39,27 +40,41 @@ async function addUserToDb(uid, username, email) {
   });
 }
 
-async function signInWithGoogle(e) {
-  e.preventDefault();
-  await getAvailableUsers().then(async () => {
-    await signInWithPopup(auth, googleProvider)
-      .then((userCred) => {
-        let username =
-          userCred.user.displayName.split(" ")[0];
-        let email = userCred.user.email;
-        let uid = userCred.user.uid;
-        let result = checkForAccountExistence(users, email);
-        let user = { username, email, uid };
-        if (!result) {
-          addUserToDb(uid, username, email);
-          setUserSession(user);
-        } else {
-          setUserSession(user);
-        }
+/*google sign in option. start from 
+https://firebase.google.com/docs/auth/web/google-signin#handle_the_sign-in_flow_with_the_firebase_sdk */
+async function signInWithGoogle() {
+  await signInWithPopup(auth, googleProvider)
+    .then(async (user) => {
+      let username = user.user.displayName.split(" ")[0];
+      let email = user.user.email;
+      let userExists = await confirmUserUniqueness(
+        email,
+        username
+      );
+      let userData = {
+        username: username,
+        email: user.user.email,
+        uid: user.user.uid,
+      };
+      // if the user does not exist, create an instance of the user in the db
+      if (userExists === false) {
+        await addUserToDb(
+          user.user.uid,
+          username,
+          email
+        ).then(() => {
+          //store user data in local storage and go to the homepage
+          setUserSession(userData);
+          location.href = "/";
+        });
+      } else {
+        setUserSession(userData);
         location.href = "/";
-      })
-      .catch((err) => console.log(err.message));
-  });
+      }
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 }
 
 async function loginUser(e) {
@@ -95,12 +110,20 @@ async function getAvailableUsers() {
   });
 }
 
-function checkForAccountExistence(userList, email) {
-  const existingAccount =
-    userList && userList.find((x) => x.email === email);
-  return existingAccount ? existingAccount : false;
+/*function to check if the value entered as username already exists.
+The user collection is checked to find a document with the particular username.
+check https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document */
+async function confirmUserUniqueness(email, username) {
+  const emailRef = doc(database, "users", email);
+  const emailSnap = await getDoc(emailRef);
+  if (emailSnap.exists()) {
+    if (emailSnap.data().username === username) {
+      return true;
+    }
+  } else {
+    return false;
+  }
 }
-
 form.addEventListener("submit", loginUser);
 googleSigninButton.addEventListener(
   "click",
