@@ -21,7 +21,7 @@ const googleSignupButton =
   document.getElementsByClassName("google-signup")[0];
 let user;
 const googleProvider = new GoogleAuthProvider();
-const [username, email, password] = [
+const [usernameElem, emailElem, passwordElem] = [
   document.getElementById("username"),
   document.getElementById("email"),
   document.getElementById("password"),
@@ -45,39 +45,40 @@ async function signUpWithGoogle() {
 async function registerUser(e) {
   e.preventDefault();
   validate();
-  let usernameExists = confirmUsernameUniqueness();
-  console.log(usernameExists);
+  // let usernameExists = confirmUsernameUniqueness();
+  // console.log(usernameExists);
   // if (usernameExists !== true) {
-  //   await createUserWithEmailAndPassword(
-  //     auth,
-  //     email.value,
-  //     password.value
-  //   )
-  //     .then((userCred) => {
-  //       addUserToDb(userCred.user.uid);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
+  await createUserWithEmailAndPassword(
+    auth,
+    emailElem.value,
+    passwordElem.value
+  )
+    .then((userCred) => {
+      addUserToDb(userCred.user.uid);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
   // } else {
   //   console.log("Username already exists");
   // }
 }
 
 async function confirmUsernameUniqueness() {
-  const docRef = doc(database, "users", username.value);
+  const docRef = doc(database, "users", usernameElem.value);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
-    return "sike"
+    return "sike";
   } else {
     return false;
   }
 }
 
 async function addUserToDb(uid) {
-  await setDoc(doc(database, "users", uid), {
-    username: username.value,
-    email: email.value,
+  await setDoc(doc(database, "users", usernameElem.value), {
+    username: usernameElem.value,
+    email: emailElem.value,
+    uid,
   }).catch((err) => console.log(err.message));
 }
 

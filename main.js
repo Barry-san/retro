@@ -5,5 +5,5 @@ document.body.prepend(nav);
 let head = document.body.previousElementSibling;
 head.insertAdjacentHTML(
   "beforeend",
-  `<link rel="stylesheet" href="/public/style.css">`
+  `<link rel="stylesheet" href="/style.css">`
 );
