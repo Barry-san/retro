@@ -1,0 +1,17 @@
+.rock, .paper, .scissors {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin-inline: 1rem;
+}
+
+.rock img, .paper img, .scissors img{
+    width: 100%;
+}
+
+.game{
+    max-width: 600px;
+    width: 80%;
+    display: flex;
+    margin: auto;
+}
