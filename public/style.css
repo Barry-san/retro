@@ -4,3 +4,14 @@
   box-sizing: border-box;
 }
 
+.error-message {
+  width: 200px;
+  color: #fff;
+  font-size: .875rem;
+  text-align: center;
+  padding: .5rem;
+  margin-inline: auto;
+  background-color: #990000;
+  border: black solid 1px;
+
+}
