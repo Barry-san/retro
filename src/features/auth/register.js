@@ -20,8 +20,8 @@ const googleSignupButton =
 const googleProvider = new GoogleAuthProvider();
 
 //used javascript destructuring to get the following html elements
-const [usernameElem, emailElem, passwordElem] = [
-  document.getElementById("username"),
+const [displayNameElem, emailElem, passwordElem] = [
+  document.getElementById("display-name"),
   document.getElementById("email"),
   document.getElementById("password"),
 ];
@@ -35,24 +35,22 @@ function validate() {
 as the unique document identifier. check
  https://firebase.google.com/docs/firestore/manage-data/add-data#set_a_document
  */
-async function addUserToDb(uid, username, email) {
+async function addUserToDb(uid, displayName, email) {
   await setDoc(doc(database, "users", email), {
-    username,
+    displayName,
     email,
     uid,
   });
 }
 
 /*function to check if the value entered as email already exists.
-The user collection is checked to find a document with the particular username.
+The user collection is checked to find a document with the particular display_name.
 check https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document */
-async function confirmUserUniqueness(email, username) {
+async function confirmUserUniqueness(email) {
   const emailRef = doc(database, "users", email);
   const emailSnap = await getDoc(emailRef);
   if (emailSnap.exists()) {
-    if (emailSnap.data().username === username) {
-      return true;
-    }
+    return true;
   } else {
     return false;
   }
@@ -63,28 +61,24 @@ https://firebase.google.com/docs/auth/web/google-signin#handle_the_sign-in_flow_
 async function signUpWithGoogle() {
   await signInWithPopup(auth, googleProvider)
     .then(async (user) => {
-      let username = user.user.displayName.split(" ")[0];
+      let displayName = user.user.displayName.split(" ")[0];
       let email = user.user.email;
-      let userExists = await confirmUserUniqueness(
-        email,
-        username
-      );
+      let uid = user.user.uid;
+      let userExists = await confirmUserUniqueness(email);
       let userData = {
-        username: username,
-        email: user.user.email,
-        uid: user.user.uid,
+        displayName,
+        email,
+        uid,
       };
       // if the user does not exist, create an instance of the user in the db
       if (userExists === false) {
-        await addUserToDb(
-          user.user.uid,
-          username,
-          email
-        ).then(() => {
-          //store user data in local storage and go to the homepage
-          setUserSession(userData);
-          location.href = "/";
-        });
+        await addUserToDb(uid, displayName, email).then(
+          () => {
+            //store user data in local storage and go to the homepage
+            setUserSession(userData);
+            location.href = "/";
+          }
+        );
       } else {
         setUserSession(userData);
         location.href = "/";
@@ -96,8 +90,8 @@ async function signUpWithGoogle() {
 }
 
 async function registerUser(e) {
-  let [username, email, password] = [
-    usernameElem.value,
+  let [displayName, email, password] = [
+    displayNameElem.value,
     emailElem.value,
     passwordElem.value,
   ];
@@ -110,52 +104,41 @@ async function registerUser(e) {
   formSubmitButton.setAttribute("disabled", true);
   formSubmitButton.innerText = "Loading...";
 
-  let userExists = await confirmUserUniqueness(
-    email,
-    username
-  );
+  let userExists = await confirmUserUniqueness(email);
 
   if (userExists === false) {
-    //if there is no user with the inputted username, create new user instance and
+    //if there is no user with the inputted displayName, create new user instance and
     //add the user to the db.
     await createUserWithEmailAndPassword(
       auth,
       email,
       password
-    )
-      .then(async (userCred) => {
-        try {
-          await addUserToDb(
-            userCred.user.uid,
-            username,
-            emailElem.value
-          ).then(() => {
-            let user = {
-              email: emailElem.value,
-              uid: userCred.user.uid,
-              username,
-            };
-            //save user data in local storage and go to the homepage
-            setUserSession(user);
-            location.href = "/";
-          });
-          //in case of any errors, enable the button and change button
-          //text back to it's default content.
-        } catch (err) {
-          console.log(err);
-          formSubmitButton.removeAttribute("disabled");
-          formSubmitButton.innerText = "Register";
-        }
-      })
-      .catch((err) => {
-        if (err.message.includes("email-already-in-use")) {
-          console.log("Email already exists");
-          formSubmitButton.removeAttribute("disabled");
-          formSubmitButton.innerText = "Register";
-        }
-      });
+    ).then(async (userCred) => {
+      try {
+        await addUserToDb(
+          userCred.user.uid,
+          displayName,
+          email
+        ).then(() => {
+          let user = {
+            email,
+            uid: userCred.user.uid,
+            displayName,
+          };
+          //save user data in local storage and go to the homepage
+          setUserSession(user);
+          location.href = "/";
+        });
+        //in case of any errors, enable the button and change button
+        //text back to it's default content.
+      } catch (err) {
+        console.log(err);
+        formSubmitButton.removeAttribute("disabled");
+        formSubmitButton.innerText = "Register";
+      }
+    });
   } else {
-    console.log("Username already exists");
+    console.log("email already in use");
     formSubmitButton.removeAttribute("disabled");
     formSubmitButton.innerText = "Register";
   }
