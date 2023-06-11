@@ -4,6 +4,9 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+
+//check out https://firebase.google.com/docs/web/setup
+//check out https://stackoverflow.com/questions/70709987/how-to-load-environment-variables-from-env-file-using-vite
 const apiKey = import.meta.env.VITE_API_KEY;
 const authDomain = import.meta.env.VITE_AUTH_DOMAIN;
 const storageBucket = import.meta.env.VITE_STORAGE_BUCKET;
