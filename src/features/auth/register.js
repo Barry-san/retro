@@ -26,7 +26,7 @@ const [displayNameElem, emailElem, passwordElem] = [
   document.getElementById("password"),
 ];
 
-//form validation function from pristine js. check out https://pristine.js.org/
+//form validation function from pristine js. check out https://pristine.js.org/ and the demo page
 function validate() {
   const pristine = new Pristine(form);
   pristine.validate();
@@ -44,7 +44,7 @@ async function addUserToDb(uid, displayName, email) {
 }
 
 /*function to check if the value entered as email already exists.
-The user collection is checked to find a document with the particular display_name.
+The user collection is checked to find a document with the particular email
 check https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document */
 async function confirmUserUniqueness(email) {
   const emailRef = doc(database, "users", email);

@@ -25,6 +25,7 @@ function validate() {
   pristine.validate();
 }
 
+//add user to firestore db. 
 async function addUserToDb(uid, displayName, email) {
   await setDoc(doc(database, "users", email), {
     displayName,
