@@ -12,3 +12,8 @@ export function setUserSession(user) {
     })
   );
 }
+
+export function logOutUser() {
+  localStorage.removeItem("user");
+  location.href = "/";
+}
