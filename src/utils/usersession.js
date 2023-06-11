@@ -7,7 +7,7 @@ export function setUserSession(user) {
     "user",
     JSON.stringify({
       email: user.email,
-      username: user.username,
+      displayName: user.displayName,
       uid: user.uid,
     })
   );

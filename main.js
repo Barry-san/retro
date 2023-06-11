@@ -5,7 +5,7 @@ document.body.prepend(nav);
 let userName = document.querySelector("#user-name");
 let userEmail = document.querySelector("#user-email");
 if (userName && userSession)
-  userName.innerText = " " + userSession.username;
+  userName.innerText = " " + userSession.displayName;
 
 if (userEmail && userSession)
   userName.innerText = " " + userSession.email;

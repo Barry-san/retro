@@ -61,7 +61,7 @@ https://firebase.google.com/docs/auth/web/google-signin#handle_the_sign-in_flow_
 async function signUpWithGoogle() {
   await signInWithPopup(auth, googleProvider)
     .then(async (user) => {
-      let displayName = user.user.displayName.split(" ")[0];
+      let displayName = user.user.displayName;
       let email = user.user.email;
       let uid = user.user.uid;
       let userExists = await confirmUserUniqueness(email);
@@ -125,7 +125,6 @@ async function registerUser(e) {
             uid: userCred.user.uid,
             displayName,
           };
-          //save user data in local storage and go to the homepage
           setUserSession(user);
           location.href = "/";
         });
