@@ -1,4 +1,5 @@
 import { setUserSession } from "../../utils/usersession";
+import { errorMessage } from "../../components/errorMessage";
 import {
   auth,
   database,
@@ -64,6 +65,7 @@ async function signInWithGoogle() {
       }
     })
     .catch((err) => {
+      form.prepend(errorMessage(err.message));
       console.log(err.message);
     });
 }
@@ -83,7 +85,7 @@ async function loginUser(e) {
         location.href = "/";
       })
       .catch((err) => {
-        console.log(err);
+        form.prepend(errorMessage(err.message));
         console.log("invalid login details");
       });
   }

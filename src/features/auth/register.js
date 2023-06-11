@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { setUserSession } from "../../utils/usersession";
+import { errorMessage } from "../../components/errorMessage";
 
 const form = document.querySelector(".register-form");
 const formSubmitButton =
@@ -86,6 +87,7 @@ async function signUpWithGoogle() {
       }
     })
     .catch((err) => {
+      form.prepend(errorMessage(err));
       console.log(err.message);
     });
 }
@@ -138,6 +140,7 @@ async function registerUser(e) {
       }
     });
   } else {
+    form.prepend(errorMessage("email already in use"));
     console.log("email already in use");
     formSubmitButton.removeAttribute("disabled");
     formSubmitButton.innerText = "Register";
