@@ -3,11 +3,10 @@ import {
   logOutUser,
 } from "../utils/usersession";
 
+//nav component. checks if user exists and returns the corresponding navigation bars based on
 export function createNavElement() {
   let userExists = userSession ? true : false;
-  console.log(userExists);
   let nav = document.createElement("nav");
-
   nav.style.backgroundColor = "transparent";
   if (userExists === false) {
     nav.innerHTML = `
@@ -29,8 +28,8 @@ export function createNavElement() {
         <a href="/">Home</a>
     </nav>
     `;
+    //check out https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement#syntax
     nav.insertAdjacentElement("beforeend", logoutButton);
   }
-
   return nav;
 }
