@@ -11,9 +11,10 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import Pristine from "pristinejs";
 
-const form = document.getElementsByTagName("form")[0];
-const googleSigninButton =
-  document.getElementsByClassName("google-signin")[0];
+const form = document.querySelector(".login-form");
+const googleSigninButton = document.querySelector(
+  ".google-signin"
+);
 const googleProvider = new GoogleAuthProvider();
 const [emailElem, passwordElem] = [
   document.getElementById("email"),
@@ -25,7 +26,7 @@ function validate() {
   pristine.validate();
 }
 
-//add user to firestore db. 
+//add user to firestore db.
 async function addUserToDb(uid, displayName, email) {
   await setDoc(doc(database, "users", email), {
     displayName,

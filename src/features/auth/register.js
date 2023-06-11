@@ -12,11 +12,12 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { setUserSession } from "../../utils/usersession";
 
-const form = document.getElementsByTagName("form")[0];
+const form = document.querySelector(".register-form");
 const formSubmitButton =
   document.querySelector(".register-cta");
-const googleSignupButton =
-  document.getElementsByClassName("google-signup")[0];
+const googleSignupButton = document.querySelector(
+  ".google-signup"
+);
 const googleProvider = new GoogleAuthProvider();
 
 //used javascript destructuring to get the following html elements
